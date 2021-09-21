@@ -7,6 +7,10 @@ function parseDocumentation(filename: string) {
   const source = fs.readFileSync(filename, { encoding: "utf-8" });
   const componentDocs = docGen.parse(filename);
 
+  console.log(componentDocs);
+
+  // TODO: What should this return exactly? Now it returns code but that
+  // doesn't feel right anymore.
   return generateDocgenCodeBlock({
     filename,
     source,
@@ -37,6 +41,7 @@ function parseDocumentation(filename: string) {
 
 function test() {
   console.log(parseDocumentation("./fixtures/Column.tsx"));
+  console.log(parseDocumentation("./fixtures/DefaultPropValue.tsx"));
 }
 
 test();
