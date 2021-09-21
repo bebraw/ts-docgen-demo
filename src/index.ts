@@ -5,22 +5,7 @@ import { generateDocgenCodeBlock } from "./generateDocgenCodeBlock";
 
 function parseDocumentation(filename: string) {
   const source = fs.readFileSync(filename, { encoding: "utf-8" });
-  const compilerOptions = {
-    jsx: ts.JsxEmit.React,
-    module: ts.ModuleKind.CommonJS,
-    target: ts.ScriptTarget.Latest,
-  };
-  const docgenOptions = {};
-  // TODO: Figure out what the first parameter is doing
-  const tsProgram = ts.createProgram([filename], compilerOptions);
-  const docGenParser = docGen.withCompilerOptions(
-    compilerOptions,
-    docgenOptions
-  );
-  const componentDocs = docGenParser.parseWithProgramProvider(
-    source,
-    () => tsProgram
-  );
+  const componentDocs = docGen.parse(filename);
 
   return generateDocgenCodeBlock({
     filename,
@@ -32,8 +17,26 @@ function parseDocumentation(filename: string) {
   });
 }
 
+// react-docgen-typescript-plugin does something along this. I kept it simple above
+// for the MVP.
+/*const compilerOptions = {
+    jsx: ts.JsxEmit.React,
+    module: ts.ModuleKind.CommonJS,
+    target: ts.ScriptTarget.Latest,
+  };
+  const docgenOptions = {};
+  const tsProgram = ts.createProgram([filename], compilerOptions);
+  const docGenParser = docGen.withCompilerOptions(
+    compilerOptions,
+    docgenOptions
+  );
+  const componentDocs = docGenParser.parseWithProgramProvider(
+    source,
+    () => tsProgram
+  );*/
+
 function test() {
-  console.log(parseDocumentation("./fixtures/DefaultPropValue.tsx"));
+  console.log(parseDocumentation("./fixtures/Column.tsx"));
 }
 
 test();
