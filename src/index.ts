@@ -1,45 +1,33 @@
 import ts from "typescript";
 import * as docGen from "react-docgen-typescript";
-import * as fs from "fs";
-import { generateDocgenCodeBlock } from "./generateDocgenCodeBlock";
 
-function parseDocumentation(filename: string) {
-  const source = fs.readFileSync(filename, { encoding: "utf-8" });
-  const componentDocs = docGen.parse(filename);
+function parseDocumentation(filePath: string) {
+  // The simplest option
+  // const componentDocs = docGen.parse(filename);
 
-  console.log(componentDocs);
-
-  // TODO: What should this return exactly? Now it returns code but that
-  // doesn't feel right anymore.
-  return generateDocgenCodeBlock({
-    filename,
-    source,
-    componentDocs,
-    docgenCollectionName: "STORYBOOK_REACT_CLASSES",
-    setDisplayName: true,
-    typePropName: "type",
-  });
-}
-
-// react-docgen-typescript-plugin does something along this. I kept it simple above
-// for the MVP.
-/*const compilerOptions = {
+  // react-docgen-typescript-plugin does something along this to allow
+  // customizability
+  const compilerOptions = {
     jsx: ts.JsxEmit.React,
     module: ts.ModuleKind.CommonJS,
     target: ts.ScriptTarget.Latest,
   };
   const docgenOptions = {};
-  const tsProgram = ts.createProgram([filename], compilerOptions);
+  const tsProgram = ts.createProgram([filePath], compilerOptions);
   const docGenParser = docGen.withCompilerOptions(
     compilerOptions,
     docgenOptions
   );
   const componentDocs = docGenParser.parseWithProgramProvider(
-    source,
+    [filePath],
     () => tsProgram
-  );*/
+  );
+
+  return componentDocs;
+}
 
 function test() {
+  // TODO: Why props and methods are empty for both cases?
   console.log(parseDocumentation("./fixtures/Column.tsx"));
   console.log(parseDocumentation("./fixtures/DefaultPropValue.tsx"));
 }
